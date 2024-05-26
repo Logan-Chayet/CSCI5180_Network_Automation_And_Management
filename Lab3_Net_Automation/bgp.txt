@@ -1,0 +1,148 @@
+from netmiko import ConnectHandler
+from prettytable import PrettyTable
+import sshInfo, json, os, re
+
+with open('bgp.conf', 'r') as file:
+    bgp_config = json.load(file)
+
+def bgp(routerNumber):
+    IP = sshInfo.getIP(routerNumber)
+    user = sshInfo.getUsername(routerNumber)
+    secret = sshInfo.getPassword(routerNumber)
+
+    currentDevice = {
+        'device_type': 'cisco_ios',
+        'host': IP,
+        'username': user,
+        'password': secret,
+    }
+    connectRouter = ConnectHandler(**currentDevice)
+    config = bgp_config['RouterInfo']['Routers']['R'+str(routerNumber)]
+    
+    local_asn = config['local_asn']
+    neighbor_ip = config['neighbor_ip']
+    remote_asn = config['neighbor_remote_as']
+    network1Advertise = config['NetworkListToAdvertise'][0]
+    network2Advertise = config['NetworkListToAdvertise'][1]
+
+    
+    configList= [
+        f'router bgp {local_asn}',
+        f'neighbor {network1Advertise} remote-as {remote_asn}',
+        f'neighbor {network1Advertise} update-source Loopback 0',
+        f'neighbor {network2Advertise} remote-as {remote_asn}',
+        f'neighbor {network2Advertise} update-source Loopback 1',
+        f'ip route {network1Advertise} 255.255.255.255 {neighbor_ip}',
+        f'ip route {network2Advertise} 255.255.255.255 {neighbor_ip}'
+
+    ]   
+    output = connectRouter.send_config_set(configList)
+    
+    print(output)
+
+    if '% Invalid input' in output:
+        connectRouter.send_config_set([f'no router bgp {local_asn}', f'no ip route {network1Advertise} 255.255.255.255 {neighbor_ip}', f'no ip route {network2Advertise} 255.255.255.255 {neighbor_ip}'])
+        return print("Invalid Input")
+    if '% Incomplete command' in output:
+        connectRouter.send_config_set([f'no router bgp {local_asn}', f'no ip route {network1Advertise} 255.255.255.255 {neighbor_ip}', f'no ip route {network2Advertise} 255.255.255.255 {neighbor_ip}'])
+        return print("Incomplete command")
+    connectRouter.disconnect()
+
+def bgpUpdateState():
+    for i in range(1,3):    
+        IP = sshInfo.getIP(i)
+        user = sshInfo.getUsername(i)
+        secret = sshInfo.getPassword(i)
+
+        currentDevice = {
+            'device_type': 'cisco_ios',
+            'host': IP,
+            'username': user,
+            'password': secret,
+        }
+        connectRouter = ConnectHandler(**currentDevice)    
+    
+        output = connectRouter.send_command('show ip bgp neighbors | include BGP state')
+
+        match = re.search(r'BGP state = (\w+)', output)
+
+        #outputs.append(match.group(1))
+        
+        bgp_config['RouterInfo']['Routers']['R'+str(i)]['state'] = match.group(1)
+        
+        with open('bgp.conf', 'w') as file:
+            json.dump(bgp_config, file, indent=4)
+
+def bgpTable():
+    for i in range(1,3):
+        myTable = PrettyTable(["BGP Neighbor IP", "BGP Neighbor AS", "BGP Neighbor State"])
+        IP = sshInfo.getIP(i)
+        user = sshInfo.getUsername(i)
+        secret = sshInfo.getPassword(i)
+
+        currentDevice = {
+            'device_type': 'cisco_ios',
+            'host': IP,
+            'username': user,
+            'password': secret,
+        }
+        connectRouter = ConnectHandler(**currentDevice)
+
+        state = connectRouter.send_command('show ip bgp neighbors | include BGP state')
+        IPandAS = connectRouter.send_command('show ip bgp neighbors | include BGP neighbor is')
+        
+
+        state_match = re.findall(r'BGP state = (\w+)', state)
+        IP_match = re.findall(r'BGP neighbor is (\S+)', IPandAS)
+        AS_match = re.findall(r'remote AS (\d+)', IPandAS)
+        
+        myTable.add_row([IP_match[0], AS_match[0], state_match[0]])
+        myTable.add_row([IP_match[1], AS_match[1], state_match[1]])
+        print("R"+str(i)+":")
+        print(myTable)
+
+def bgpRoutes():
+    for i in range(1,3):
+        IP = sshInfo.getIP(i)
+        user = sshInfo.getUsername(i)
+        secret = sshInfo.getPassword(i)
+
+        currentDevice = {
+            'device_type': 'cisco_ios',
+            'host': IP,
+            'username': user,
+            'password': secret,
+        }
+        connectRouter = ConnectHandler(**currentDevice)
+
+        routes = connectRouter.send_command('show ip route | include via')
+
+
+        routes_match = re.findall(r'S.+', routes)
+        
+        print("R"+str(i)+":")
+        print(routes_match[0])
+        print(routes_match[1])
+
+def bgpConfigs():
+    for i in range(1,3):
+        IP = sshInfo.getIP(i)
+        user = sshInfo.getUsername(i)
+        secret = sshInfo.getPassword(i)
+
+        currentDevice = {
+            'device_type': 'cisco_ios',
+            'host': IP,
+            'username': user,
+            'password': secret,
+        }
+        connectRouter = ConnectHandler(**currentDevice)
+
+        config = connectRouter.send_command('show run')
+        
+        fileName = "R"+str(i)+"config.txt"
+
+        with open(fileName, 'w') as file:
+            file.write(config)
+
+        print(f"{fileName} saved")

@@ -1,0 +1,9 @@
+[r1r2]
+student@10.224.78.231
+student@10.224.76.61
+
+[liverpool]
+student@10.224.78.231
+
+[madrid]
+student@10.224.76.61

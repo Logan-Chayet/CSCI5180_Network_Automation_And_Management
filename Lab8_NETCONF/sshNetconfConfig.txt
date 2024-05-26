@@ -1,0 +1,25 @@
+hostname EDGE-DEN
+ip domain-name EDGE-DEN
+crypto key generate rsa
+
+ip ssh version 2
+line vty 0 4
+transport input ssh
+login local
+
+username admin privilege 15 secret password
+
+int fa 5/0
+ip address 192.172.2.7 255.255.255.0
+no sh
+
+
+exit
+netconf ssh
+netconf lock-time 60
+netconf max-sessions 5
+netconf max-message 99999
+
+int fa 5/0 
+ip address 192.172.2.4 255.255.255.0
+no sh

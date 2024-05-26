@@ -1,0 +1,11 @@
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+student    19183  0.1  5.0 3942260 49080 ?       Ssl  Mar10   2:38 /usr/bin/gnome-shell
+root         317  0.0  3.8  97964 37432 ?        S<s  Mar08   3:00 /lib/systemd/systemd-journald
+root       45182  0.0  2.4  37684 23520 pts/3    S+   22:35   0:00 /usr/bin/python3 /home/student/.ansible/tmp/ansible-tmp-1710218116.0753324-74382-170418792828998/AnsiballZ_command.py
+root        2691  0.0  2.2 1319816 22272 ?       Ssl  Mar08   0:24 /usr/lib/snapd/snapd
+student    19676  0.0  1.7 684708 16912 ?        SNsl Mar10   0:02 /usr/libexec/tracker-miner-fs-3
+student    19898  0.0  1.1 502244 11520 ?        Sl   Mar10   0:02 update-notifier
+root       44138  0.2  1.1  17440 10880 ?        Ss   22:34   0:00 sshd: student [priv]
+root       34197  0.0  1.1  17468 10808 ?        Ss   15:53   0:00 sshd: student [priv]
+student    44216  0.9  0.8  18004  8740 ?        S    22:34   0:00 sshd: student@pts/2
+student    19804  0.0  0.8 545032  8476 ?        Ssl  Mar10   0:00 /usr/libexec/gsd-xsettings

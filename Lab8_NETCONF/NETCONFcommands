@@ -1,0 +1,112 @@
+#Initial Hello
+<?xml version="1.0"?> <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"> <capabilities> <capability>urn:ietf:params:netconf:base:1.0</capability> </capabilities> </hello>]]>]]>
+
+#Get Config
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<get-config>
+<source>
+<running/>
+</source>
+</get-config>
+</rpc>]]>]]>
+
+#Get INT Fa1/0
+<?xml version="1.0"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:cpi="http://www.cisco.com/cpi_10/schema" message-id="1">
+   <get-config>
+        <source>
+             <running/>
+         </source>
+    <filter>      
+    <config-format-text-cmd>
+               <text-filter-spec>| sec interface FastEthernet1/0</text-filter-spec>
+              </config-format-text-cmd>
+          </filter>
+      </get-config>
+</rpc>]]>]]>
+
+#Get Interfaces
+<?xml version="1.0" encoding=\"UTF-8\"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <get-config>
+      <source>
+         <running/>
+      </source>
+      <filter>
+         <config-format-text-block>
+            <text-filter-spec> | inc interface </text-filter-spec>
+         </config-format-text-block>
+      </filter>
+   </get-config>
+</rpc>]]>]]>
+
+#Configure loopback
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"> 
+   <edit-config>
+      <target>
+         <running/>
+      </target>
+      <config>
+         <cli-config-data>
+	    <cmd>hostname Lab8Router</cmd>
+            <cmd>interface loopback 10</cmd>
+            <cmd>ip address 10.1.1.1 255.255.255.255</cmd>
+</cli-config-data>
+      </config>
+   </edit-config>
+</rpc>]]>]]>
+
+#Get Loopback
+<?xml version="1.0"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:cpi="http://www.cisco.com/cpi_10/schema" message-id="2">
+   <get-config>
+        <source>
+             <running/>
+         </source>
+    <filter>      
+    <config-format-text-cmd>
+               <text-filter-spec>| sec interface</text-filter-spec>
+              </config-format-text-cmd>
+          </filter>
+      </get-config>
+</rpc>]]>]]>
+
+#Copy run start
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <edit-config>
+      <target>
+         <running/>
+      </target>
+      <config>
+         <cli-config-data>
+            <cmd>do copy run start</cmd>
+</cli-config-data>
+      </config>
+   </edit-config>
+</rpc>]]>]]>
+
+<?xml version="1.0"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<get-config>
+<source>
+<running/>
+</source>
+<filter>
+  <interfaces xmlns="urn:ietf:params:xml:ns:ietf-interfaces">
+    <interface>
+      <name>Loopback10</name>
+    </interface>
+  </interfaces>
+</filter>
+</get-config>
+</rpc>]]>]]>
+
+
+<?xml version="1.0"?>
+<rpc message-id="1" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <get>
+  </get>
+</rpc>]]>]]>

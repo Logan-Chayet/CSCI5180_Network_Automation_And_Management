@@ -1,0 +1,14 @@
+{"routers":[
+	{
+		"routerID": 1,
+		"ip": "192.168.122.2",
+		"user": "admin",
+		"password": "password"
+	},
+	{
+        	"routerID": 2,
+       		"ip": "192.168.122.3",
+        	"user": "admin",
+        	"password": "password"
+	}
+]}

@@ -1,0 +1,17 @@
+import ipaddress, sshInfo
+
+def getValidIP(routerNumber):
+    ip = sshInfo.getIP(routerNumber)
+    try:
+        ipaddress.ip_address(ip)
+    except ValueError:
+        print("The IP: "+ip+" is not valid")
+
+def getValidIPs():
+    for i in range(1,3):
+        ip = sshInfo.getIP(i)
+        try:
+            ipaddress.ip_address(ip)
+            print(ip+" is Valid")
+        except ValueError:
+            print("The IP: "+ip+" is not valid")

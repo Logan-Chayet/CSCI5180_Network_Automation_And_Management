@@ -1,0 +1,30 @@
+import json
+import os
+
+if os.path.exists('sshInfo.json'):
+    f = open('sshInfo.json', "r")
+    data = json.loads(f.read())
+else:
+    print("File does not exist!")
+    exit()
+
+def getIP(routerNumber):
+    for i in data["routers"]:
+        if i["routerID"] == routerNumber:
+            return i["ip"]
+def getUsername(routerNumber):
+    for i in data["routers"]:
+        if i["routerID"] == routerNumber:
+            return i["user"]
+
+def getPassword(routerNumber):
+    for i in data["routers"]:
+        if i["routerID"] == routerNumber:
+            return i["password"]
+
+def getIPs():
+    IPs=[]
+    for i in data["routers"]:
+        IPs.append(i["ip"])
+    return IPs
+

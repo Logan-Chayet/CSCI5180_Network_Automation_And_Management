@@ -1,0 +1,254 @@
+- name: Install Packages
+  hosts: r1r2
+  become: yes
+  tasks:
+    - name: Install these packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - ftp
+        - apache2
+        - python3-pip
+        - expect
+        - net-tools
+- name: Create Groups
+  hosts: r1r2
+  become: yes
+  tasks:
+    - name: Create these groups
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - Attack
+        - Defense
+        - Captain
+- name: Create Liver Pool Users
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Create these users
+      ansible.builtin.user:
+        local: False
+        name: "{{ item.name }}"
+        comment: "{{ item.gecos }}"
+        groups: "{{ item.groups }}"
+        umask: "{{ item.umask }}"
+        password: "{{ 'password' | password_hash('sha512') }}"
+        shell: /bin/bash
+        create_home: true
+      loop:
+        - { name: 'hkewell', gecos: 'Harry Kewell', groups: 'Attack', umask: '111' }
+        - { name: 'mowen', gecos: 'Michael Owen', groups: 'Attack', umask: '111' }
+        - { name: 'jcarragher', gecos: 'Jamie Carragher', groups: 'Defense', umask: '666' }
+        - { name: 'dagger', gecos: 'Daniel Agger', groups: 'Defense', umask: '666' }        
+        - { name: 'sgerrard', gecos: 'Steven Gerrard', groups: 'Captain,sudo', umask: '000' }
+- name: Create Real Madrid Users
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Create these users
+      ansible.builtin.user:
+        local: False
+        name: "{{ item.name }}"
+        comment: "{{ item.gecos }}"
+        groups: "{{ item.groups }}"
+        umask: "{{ item.umask }}"
+        password: "{{ 'password' | password_hash('sha512') }}"
+        shell: /bin/bash
+        create_home: true
+      loop:
+        - { name: 'lfigo', gecos: 'Luis Figo', groups: 'Attack', umask: '111' }
+        - { name: 'rsoldado', gecos: 'Roberto Soldado', groups: 'Attack', umask: '111' }
+        - { name: 'rcarlos', gecos: 'Roberto Carlos', groups: 'Defense', umask: '666' }
+        - { name: 'fcannavaro', gecos: 'Fabio Cannavaro', groups: 'Defense', umask: '666' }
+        - { name: 'zzidane', gecos: 'Zinedine Zidane', groups: 'Captain,sudo', umask: '000' }
+- name: Create Route Info Directory Liverpool
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Create Directory Liverpool
+      ansible.builtin.file:
+        path: /Liverpool_Admin/Router_Info
+        state: directory
+        owner: sgerrard
+        group: Captain
+        mode: "775"
+- name: Create Route Info Directory Real Madrid
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Create Directory Real Madrid
+      ansible.builtin.file:
+        path: /Real_Madrid_Admin/Router_Info
+        state: directory
+        owner: zzidane
+        group: Captain
+        mode: "775"
+- name: Captain Details Liverpool
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Create File Liverpool
+      ansible.builtin.file:
+          path: "/Liverpool_Admin/Router_Info/Captain_Details.txt"
+          state: touch
+    - name: Insert Liverpool Data
+      ansible.builtin.copy:
+          dest: "/Liverpool_Admin/Router_Info/Captain_Details.txt"
+          content: |
+            Steven Gerrard
+            American
+            sgerrard
+- name: Captain Details Real Madrid
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Create File Real Madrid
+      ansible.builtin.file:
+          path: "/Real_Madrid_Admin/Router_Info/Captain_Details.txt"
+          state: touch
+    - name: Insert Real_Madrid Data
+      ansible.builtin.copy:
+          dest: "/Real_Madrid_Admin/Router_Info/Captain_Details.txt"
+          content: |
+            Zinedine Zidane
+            Canadian
+            zzidane
+- name: Create ps and netstat files Liverpool
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Routing Table
+      command: netstat -r
+      register: netstat
+    - name: Top 10 Running Processes
+      shell: "ps aux --sort=-%mem | head -n 11"
+      register: ps
+    - name: Create file
+      ansible.builtin.file:
+        path: "{{item}}"
+        state: touch
+      loop:
+        - /home/student/netstat_liverpool.txt
+        - /home/student/ps_liverpool.txt
+    - name: Print output to file
+      ansible.builtin.copy:
+        content: "{{ item.content }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { content: '{{netstat.stdout}}', dest: '/home/student/netstat_liverpool.txt'}
+        - { content: '{{ps.stdout}}', dest: '/home/student/ps_liverpool.txt'} 
+- name: Create ps and netstat files Real Madrid
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Routing Table
+      command: netstat -r
+      register: netstat
+    - name: Top 10 Running Processes
+      shell: "ps aux --sort=-%mem | head -n 11"
+      register: ps
+    - name: Create file
+      ansible.builtin.file:
+        path: "{{item}}"
+        state: touch
+      loop:
+        - /home/student/netstat_madrid.txt
+        - /home/student/ps_madrid.txt
+    - name: Print output to file
+      ansible.builtin.copy:
+        content: "{{ item.content }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { content: '{{netstat.stdout}}', dest: '/home/student/netstat_madrid.txt'}
+        - { content: '{{ps.stdout}}', dest: '/home/student/ps_madrid.txt'}
+- name: SCP File Transfer Liverpool
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: SCP
+      expect:
+        command: "{{ item }}"
+        responses:
+          ".*Are you sure you want to continue connecting (yes/no/[fingerprint])?.*": "yes"
+          ".*password.*": "badcat768"
+      loop:
+        - scp /home/student/ps_liverpool.txt student@10.224.77.252:/home/student/ps_liverpool.txt
+        - scp /home/student/netstat_liverpool.txt student@10.224.77.252:/home/student/netstat_liverpool.txt
+- name: SCP File Transfer Real Madrid
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: SCP
+      expect:
+        command: "{{ item }}"
+        responses:
+          ".*Are you sure you want to continue connecting (yes/no/[fingerprint])?.*": "yes"
+          ".*password.*": "badcat768"
+      loop:
+        - scp /home/student/ps_madrid.txt student@10.224.77.252:/home/student/ps_madrid.txt
+        - scp /home/student/netstat_madrid.txt student@10.224.77.252:/home/student/netstat_madrid.txt
+- name: Get Players' SSH Keys Real Madrid
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Commands
+      command: "{{ item }}"
+      loop:
+        - mkdir /home/student/sshKeys
+        - mv /home/lfigo/.ssh/id_rsa.pub /home/student/sshKeys/
+        - mv /home/fcannavaro/.ssh/id_rsa.pub /home/fcannavaro/.ssh/id_rsa2.pub
+        - mv /home/fcannavaro/.ssh/id_rsa2.pub /home/student/sshKeys/
+        - mv /home/zzidane/.ssh/id_rsa.pub /home/zzidane/.ssh/id_rsa3.pub
+        - mv /home/zzidane/.ssh/id_rsa3.pub /home/student/sshKeys/
+- name: Create Keys File
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Do assemble command
+      ansible.builtin.assemble:
+        src: /home/student/sshKeys
+        dest: /root/.ssh/Real_Madrid_authorizedKeys.txt
+- name: Get Players' SSH Key Liverpool
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Commands
+      command: "{{ item }}"
+      loop:
+        - mkdir /home/student/sshKeys
+        - mv /home/sgerrard/.ssh/id_rsa.pub /home/student/sshKeys/
+        - mv /home/mowen/.ssh/id_rsa.pub /home/mowen/.ssh/id_rsa2.pub
+        - mv /home/mowen/.ssh/id_rsa2.pub /home/student/sshKeys/
+        - mv /home/dagger/.ssh/id_rsa.pub /home/dagger/.ssh/id_rsa3.pub
+        - mv /home/dagger/.ssh/id_rsa3.pub /home/student/sshKeys/
+- name: Create Keys File
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Do assemble command
+      ansible.builtin.assemble:
+        src: /home/student/sshKeys
+        dest: /root/.ssh/Liverpool_authorizedKeys.txt
+- name: Copy files back to FIFA_admin Liverpool
+  hosts: liverpool
+  become: yes
+  tasks:
+    - name: Copy file
+      expect:
+        command: scp /root/.ssh/Liverpool_authorizedKeys.txt student@10.224.77.252:/root/.ssh/Liverpool_authorizedKeys.txt
+        responses:
+          ".*Are you sure you want to continue connecting (yes/no/[fingerprint])?.*": "yes"
+          ".*password.*": "badcat768"
+- name: Copy files back to FIFA_admin Real Madrid
+  hosts: madrid
+  become: yes
+  tasks:
+    - name: Copy file
+      expect:
+        command: scp /root/.ssh/Real_Madrid_authorizedKeys.txt student@10.224.77.252:/root/.ssh/Real_Madrid_authorizedKeys.txt
+        responses:
+          ".*Are you sure you want to continue connecting (yes/no/[fingerprint])?.*": "yes"
+          ".*password.*": "badcat768"
