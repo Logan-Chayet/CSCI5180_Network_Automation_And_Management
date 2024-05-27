@@ -1,0 +1,8 @@
+int loopback 0
+ip address 2.2.2.2 255.255.255.0
+no shut
+
+
+router bgp 159
+neighbor 10.10.10.1 remote-as 1
+network 2.2.2.0 mask 255.255.255.0 

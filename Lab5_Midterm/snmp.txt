@@ -1,0 +1,199 @@
+{
+    "Routers": {
+        "R4.R4.com": {
+            "addresses": {
+                "FastEthernet0/0": {
+                    "v4": "192.168.2.10/24",
+                    "v6": "40:00:00:00:00:00:00:00:00:00:00:00:00:00:00:01/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/0": {
+                    "v4": "10.0.0.2/24",
+                    "v6": "44:44:00:00:00:00:00:00:00:00:00:00:00:00:00:01/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "GigabitEthernet3/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "Null0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "up(1)"
+                }
+            }
+        },
+        "R2": {
+            "addresses": {
+                "FastEthernet0/0": {
+                    "v4": "192.168.2.12/24",
+                    "v6": "40:00:00:00:00:00:00:00:02:00:00:ff:fe:22:22:22/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/0": {
+                    "v4": "192.168.1.10/24",
+                    "v6": "10:00:00:00:00:00:00:00:02:00:00:ff:fe:00:00:02/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "GigabitEthernet3/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "Null0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "up(1)"
+                }
+            }
+        },
+        "R3": {
+            "addresses": {
+                "FastEthernet0/0": {
+                    "v4": "192.168.2.13/24",
+                    "v6": "40:00:00:00:00:00:00:00:02:00:00:ff:fe:33:33:33/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/0": {
+                    "v4": "192.168.1.11/24",
+                    "v6": "10:00:00:00:00:00:00:00:02:00:00:ff:fe:00:00:03/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "GigabitEthernet3/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "Null0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "up(1)"
+                }
+            }
+        },
+        "R5.R5.com": {
+            "addresses": {
+                "FastEthernet0/0": {
+                    "v4": "192.168.2.100/24",
+                    "v6": "40:00:00:00:00:00:00:00:02:00:00:ff:fe:55:55:55/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet1/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "GigabitEthernet3/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "Null0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "up(1)"
+                }
+            }
+        },
+        "R1": {
+            "addresses": {
+                "FastEthernet0/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet1/0": {
+                    "v4": "192.168.1.100/24",
+                    "v6": "10:00:00:00:00:00:00:00:00:00:00:00:00:00:00:01/64",
+                    "Status": "up(1)"
+                },
+                "FastEthernet1/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "FastEthernet2/1": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "GigabitEthernet3/0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "down(2)"
+                },
+                "Null0": {
+                    "v4": "",
+                    "v6": "",
+                    "Status": "up(1)"
+                }
+            }
+        }
+    }
+}
